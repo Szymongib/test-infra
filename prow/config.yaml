@@ -526,6 +526,7 @@ branch-protection:
                   - pre-rel111-kyma-gke-central-connector
                   - pre-rel111-kyma-artifacts
                   - pre-rel111-kyma-installer
+                  - pre-rel111-kyma-gke-compass-integration
             release-1.10:
               required_status_checks:
                 contexts:

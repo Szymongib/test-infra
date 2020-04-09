@@ -551,6 +551,8 @@ templates:
             - name: kyma-gke-central-connector
             - name: kyma-artifacts
             - name: kyma-installer
+            - name: kyma-gke-compass-integration
+              since: "1.11"
             - name: kyma-gke-minio-gcs-gateway
               since: "1.6"
               until: "1.8"

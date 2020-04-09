@@ -300,6 +300,44 @@ gke_backup_job_template_k14: &gke_backup_job_template_k14
             memory: 200Mi
             cpu: 80m
 
+
+
+gke_compass_integration_job_labels_template: &gke_integration_job_labels_template
+  preset-kyma-keyring: "true"
+  preset-kyma-encryption-key: "true"
+  preset-kms-gc-project-env: "true"
+  preset-kyma-guard-bot-github-token: "true"
+  preset-sa-gke-kyma-integration: "true"
+  preset-gc-compute-envs: "true"
+  preset-gc-project-env: "true"
+  preset-docker-push-repository-gke-integration: "true"
+  preset-dind-enabled: "true"
+  preset-kyma-artifacts-bucket: "true"
+  preset-gardener-azure-kyma-integration: "true"
+
+gke_compass_integration_job_template: &gke_compass_integration_job_template
+  skip_report: false
+  max_concurrency: 10
+  spec:
+    containers:
+      - <<: *base_image_k15
+        securityContext:
+          privileged: true
+        command:
+          - "bash"
+        args:
+          - "-c"
+          - "${KYMA_PROJECT_DIR}/test-infra/prow/scripts/cluster-integration/kyma-gke-compass-integration.sh"
+        env:
+          - name: CLUSTER_VERSION
+            value: "1.15"
+          - name: CLOUDSDK_COMPUTE_ZONE
+            value: "europe-west4-b"
+        resources:
+          requests:
+            memory: 200Mi
+            cpu: 80m
+
 gke_job_labels_template: &gke_job_labels_template
   preset-kyma-guard-bot-github-token: "true"
   preset-sa-gke-kyma-integration: "true"
@@ -554,6 +592,19 @@ presubmits: # runs on PRs
       extra_refs:
         - <<: *test_infra_ref
           base_ref: release-1.9
+    - name: pre-rel111-kyma-gke-compass-integration
+      optional: false
+      branches:
+        - release-1.11
+      <<: *gke_compass_integration_job_template
+      always_run: false
+      labels:
+        preset-build-release: "true"
+        <<: *gke_compass_integration_job_labels_template
+      extra_refs:
+        - <<: *test_infra_ref
+          base_ref: release-1.11
+
 
 postsubmits:
   kyma-project/kyma:
